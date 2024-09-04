@@ -231,8 +231,7 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
       one_sample_mean(df, group_col, outcome_col)
     }
   } else {
-    test_stat_func <- test_stat ### FIX ME ADD MORE CODE; check if function of correct format
-    ## In general, function with df, group_col, outcome_col as inputs ?
+    test_stat_func <- test_stat
   }
 
   # get test statistic value from observed data
