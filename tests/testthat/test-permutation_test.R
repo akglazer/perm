@@ -1,0 +1,66 @@
+test_that("permutation test works", {
+  # outcome the same for each unit, test that p-value is 1
+  data <- data.frame(group = c(rep(1, 10), rep(2, 10)),
+                     outcome = c(rep(1, 10), rep(1, 10)))
+  outcome <- permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+                   test_stat = "diff_in_means", perm_func = permute_group,
+                   alternative = "greater",
+                   shift = 0, reps = 10,
+                   return_perm_dist = F, return_test_dist = T, seed = 42)
+  expect_equal(outcome$p_value, 1)
+
+  # mice example from https://www.thoughtco.com/example-of-a-permutation-test-3997741
+  data <- data.frame(experimental_group = c(1, 0, 1, 0, 1, 0),
+                     race_time = c(10, 12, 9, 11, 11, 13))
+  outcome <- permutation_test(df = data, group_col = "experimental_group",
+                              outcome_col = "race_time", test_stat = "diff_in_means",
+                              perm_func = permute_group,
+                              alternative = "less",
+                              shift = 0, reps = 1000, seed = 42)
+  expect_equal(outcome$p_value, 0.1, tolerance = 0.1)
+
+  # Strata and group the same, so no new group assignments
+  data <- data.frame(group = c(rep(1, 10), rep(2, 10)),
+                     strata = c(rep(1, 10), rep(2, 10)),
+                     outcome = c(rep(4, 10), rep(1, 10)))
+  outcome <- permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+                              strata_col = "strata",
+                              test_stat = "diff_in_means", perm_func = strat_permute_group, reps = 10,
+                              return_perm_dist = T, return_test_dist = T, seed = 42)
+  # check that test stat is the same for all permutations
+  expect_equal(outcome$test_stat_dist, rep(3, 10))
+  # check that indices only permuted within strata
+  expect_equal(sum(outcome$perm_indices_mat[,1:10] < 11), 100)
+
+  # One-sample problem
+  data <- data.frame(group = rep(1, 3), outcome = c(-1, 1, 2))
+  perm_set <- as.matrix(expand.grid(c(-1, 1), c(-1, 1), c(-1, 1)))
+  output <- permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+                              test_stat = "mean", perm_func = permute_sign,
+                              alternative = "greater",
+                              perm_set = perm_set,
+                              complete_enum = T)
+  expect_equal(output$p_value, 0.375)
+})
+
+test_that("permutation test confidence interval works", {
+  x <- c(35.3, 35.9, 37.2, 33.0, 31.9, 33.7, 36.0, 35.0,
+         33.3, 33.6, 37.9, 35.6, 29.0, 33.7, 35.7)
+  y <- c(32.5, 34.0, 34.4, 31.8, 35.0, 34.6, 33.5, 33.6,
+         31.5, 33.8, 34.6)
+  df <- data.frame(outcome = c(x, y),
+                   group = c(rep(1, length(x)), rep(0, length(y))))
+
+  output <- permutation_test_ci(df, "group", "outcome", strata_col = NULL,
+                      test_stat = "diff_in_means",
+                      perm_func = permute_group,
+                      upper_bracket = NULL,
+                      lower_bracket = NULL,
+                      cl = 0.95,
+                      e = 0.01,
+                      reps = 100000,
+                      seed = 42)
+
+  expect_equal(output$ci[1], -0.65, tolerance=.1)
+  expect_equal(output$ci[2], 2.34, tolerance=.1)
+})
