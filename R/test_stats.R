@@ -8,6 +8,7 @@
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
 #' @param treatment_value The value of group_col to be considered 'treatment'
 #' @return The difference in mean outcome between the two groups
+#' @export
 diff_in_means <- function(df, group_col, outcome_col, treatment_value=NULL){
   # get unique groups
   groups <- unique(df[[group_col]])
@@ -46,6 +47,7 @@ diff_in_means <- function(df, group_col, outcome_col, treatment_value=NULL){
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
 #' @param treatment_value The value of group_col to be considered 'treatment'
 #' @return The difference in median outcome between the two groups
+#' @export
 diff_in_medians <- function(df, group_col, outcome_col, treatment_value=NULL){
   # get unique groups
   groups <- unique(df[[group_col]])
@@ -83,6 +85,7 @@ diff_in_medians <- function(df, group_col, outcome_col, treatment_value=NULL){
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
 #' @return The t test statistic
+#' @export
 ttest_stat <- function(df, group_col, outcome_col){
   # get unique groups
   groups <- unique(df[[group_col]])
@@ -107,6 +110,7 @@ ttest_stat <- function(df, group_col, outcome_col){
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
 #' @return The one-way anova test statistic:
 #' \eqn{\sum_{g=1}^G n_g(\overline{X_g} - \overline{X})^2} where \eqn{g} indexes the groups
+#' @export
 one_way_anova_stat <- function(df, group_col, outcome_col){
   # get unique groups
   groups <- unique(df[[group_col]])
@@ -132,6 +136,7 @@ one_way_anova_stat <- function(df, group_col, outcome_col){
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
 #' @return The one-sample problem test statistic: the mean of the product of the outcome and group
+#' @export
 one_sample_mean <- function(df, group_col, outcome_col){
   t <- mean(df[[outcome_col]] * df[[group_col]])
 

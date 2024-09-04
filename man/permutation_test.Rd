@@ -15,6 +15,7 @@ permutation_test(
   shift = 0,
   reps = 10000,
   perm_set = NULL,
+  complete_enum = F,
   return_test_dist = FALSE,
   return_perm_dist = FALSE,
   seed = NULL
@@ -38,6 +39,8 @@ permutation_test(
 \item{reps}{Number of iterations to use when calculating permutation p-value}
 
 \item{perm_set}{Matrix of permutations to use instead of reps iterations of perm_func}
+
+\item{complete_enum}{Boolean, whether to calculate P-value under complete enumeration of permutations}
 
 \item{seed}{An integer seed value}
 

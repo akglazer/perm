@@ -9,6 +9,7 @@
 #' @param seed An integer seed value
 #' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column randomly shuffled
+#' @export
 permute_group <- function(df, group_col, strata_col=NULL,
                           seed=NULL, return_perm=FALSE){
   if(is.null(seed) == FALSE){
@@ -47,6 +48,7 @@ permute_group <- function(df, group_col, strata_col=NULL,
 #' @param return_perm Boolean, return the permuted indices if TRUE
 
 #' @return The inputted data frame with the group column randomly shuffled
+#' @export
 strat_permute_group <- function(df, group_col, strata_col,
                                 seed=NULL, return_perm=FALSE){
   if(is.null(seed) == FALSE){
@@ -91,6 +93,7 @@ strat_permute_group <- function(df, group_col, strata_col,
 #' @param seed An integer seed value
 #' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column replaced with randomly assigned signs
+#' @export
 permute_sign <- function(df, group_col, strata_col=NULL,
                           seed=NULL, return_perm=FALSE){
   # Set seed if not NULL

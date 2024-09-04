@@ -16,6 +16,7 @@
 #' @param return_dist Boolean, whether to return test statistic distribution under permutations
 #' @param seed An integer seed value
 #' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
+#' @export
 permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
                              test_stat = "diff_in_means",
                              perm_func = permute_group,
@@ -182,6 +183,7 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 #' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
 #' @param seed An integer seed value
 #' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
+#' @export
 permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
                                 test_stat = "diff_in_means",
                                 perm_func = permute_group,
