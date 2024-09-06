@@ -51,6 +51,5 @@ permutation_test_ci(
 A list containing the permutation test p-value, and the test statistic distribution if applicable
 }
 \description{
-This function takes a data frame and group and outcome column name as input
-and returns the dataframe with the group column randomly permuted
+This function constructs a confidence interval by inverting permutation tests
 }

@@ -42,6 +42,7 @@ diff_in_means <- function(df, group_col, outcome_col, treatment_value=NULL){
 #' This function takes a data frame, and group and outcome column names as input
 #' and returns the difference in median outcome between the two groups
 #'
+#' @importFrom stats median
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable
@@ -81,6 +82,7 @@ diff_in_medians <- function(df, group_col, outcome_col, treatment_value=NULL){
 #' This function takes a data frame, and group and outcome column names as input
 #' and returns the t test statistic
 #'
+#' @importFrom stats t.test
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param outcome_col The name of the column in df that corresponds to the outcome variable

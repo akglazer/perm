@@ -9,6 +9,16 @@ test_that("permutation test works", {
                    return_perm_dist = F, return_test_dist = T, seed = 42)
   expect_equal(outcome$p_value, 1)
 
+  # with difference in medians test stat
+  data <- data.frame(group = c(rep(1, 3), rep(2, 3)), out = c(rep(1, 3), rep(2, 3)))
+  output <- permutation_test(df = data, group_col = "group", outcome_col = "out",
+                              test_stat = "diff_in_medians", perm_func = permute_group,
+                              alternative = "greater",
+                              shift = 0, reps = 10^4,
+                              return_perm_dist = F, return_test_dist = T, seed = 42)
+  expect_equal(unique(output$test_stat_dist), c(1, -1))
+  expect_equal(output$p_value, 1)
+
   # mice example from https://www.thoughtco.com/example-of-a-permutation-test-3997741
   data <- data.frame(experimental_group = c(1, 0, 1, 0, 1, 0),
                      race_time = c(10, 12, 9, 11, 11, 13))

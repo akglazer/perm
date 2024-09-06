@@ -1,7 +1,6 @@
 #' Run permutation test
 #'
-#' This function takes a data frame and group and outcome column name as input
-#' and returns the dataframe with the group column randomly permuted
+#' This function runs a permutation test
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
@@ -10,10 +9,12 @@
 #' @param test_stat Test statistic function
 #' @param perm_func Function to permute group
 #' @param alternative String, two-sided or one-sided (greater or less) p-value
+#' @param shift Value of shift to apply in one- or two-sample problem
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
 #' @param complete_enum Boolean, whether to calculate P-value under complete enumeration of permutations
-#' @param return_dist Boolean, whether to return test statistic distribution under permutations
+#' @param return_test_dist Boolean, whether to return test statistic distribution under permutations
+#' @param return_perm_dist Boolean, whether to return the permutaiton distribution
 #' @param seed An integer seed value
 #' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
 #' @export
@@ -166,8 +167,7 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 
 #' Construct confidence interval by inverting permutation tests
 #'
-#' This function takes a data frame and group and outcome column name as input
-#' and returns the dataframe with the group column randomly permuted
+#' This function constructs a confidence interval by inverting permutation tests
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label

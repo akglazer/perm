@@ -17,16 +17,16 @@ strat_permute_group(
 
 \item{group_col}{The name of the column in df that corresponds to the group label}
 
+\item{strata_col}{The name of the column in df that corresponds to the strata}
+
 \item{seed}{An integer seed value}
 
 \item{return_perm}{Boolean, return the permuted indices if TRUE}
-
-\item{strat_col}{The name of the column in df that corresponds to the strata}
 }
 \value{
 The inputted data frame with the group column randomly shuffled
 }
 \description{
-This function takes a data frame and group and outcome column name as input
-and returns the dataframe with the group column randomly permuted
+This function takes a data frame and group and strata column name as input
+and returns the dataframe with the group column randomly permuted by strata
 }

@@ -17,11 +17,11 @@ permute_sign(
 
 \item{group_col}{The name of the column in df that corresponds to the group label}
 
+\item{strata_col}{The name of the column in df that corresponds to the strata}
+
 \item{seed}{An integer seed value}
 
 \item{return_perm}{Boolean, return the permuted indices if TRUE}
-
-\item{strat_col}{The name of the column in df that corresponds to the strata}
 }
 \value{
 The inputted data frame with the group column replaced with randomly assigned signs

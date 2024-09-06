@@ -1,11 +1,11 @@
 #' Unstratified group permutation
 #'
-#' This function takes a data frame and group and outcome column name as input
+#' This function takes a data frame and group column name as input
 #' and returns the dataframe with the group column randomly permuted
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
-#' @param strat_col The name of the column in df that corresponds to the strata
+#' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
 #' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column randomly shuffled
@@ -38,12 +38,12 @@ permute_group <- function(df, group_col, strata_col=NULL,
 
 #' Stratified group permutation
 #'
-#' This function takes a data frame and group and outcome column name as input
-#' and returns the dataframe with the group column randomly permuted
+#' This function takes a data frame and group and strata column name as input
+#' and returns the dataframe with the group column randomly permuted by strata
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
-#' @param strat_col The name of the column in df that corresponds to the strata
+#' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
 #' @param return_perm Boolean, return the permuted indices if TRUE
 
@@ -89,7 +89,7 @@ strat_permute_group <- function(df, group_col, strata_col,
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
-#' @param strat_col The name of the column in df that corresponds to the strata
+#' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
 #' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column replaced with randomly assigned signs
