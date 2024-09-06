@@ -51,6 +51,14 @@ test_that("permutation test works", {
                               perm_set = perm_set,
                               complete_enum = T)
   expect_equal(output$p_value, 0.375)
+
+  # One-sample problem, 2/32 combn same
+  data <- data.frame(group = rep(1, 5), out = 0:4)
+  output <- permutation_test(df = data, group_col = "group", outcome_col = "out",
+                             test_stat = "mean", perm_func = permute_sign,
+                             alternative = "greater", seed = 42)
+  expect_equal(round(output$p_value, 2), 0.06)
+
 })
 
 test_that("permutation test confidence interval works", {
@@ -73,4 +81,20 @@ test_that("permutation test confidence interval works", {
 
   expect_equal(output$ci[1], -0.65, tolerance=.1)
   expect_equal(output$ci[2], 2.34, tolerance=.1)
+
+  # One-sample problem CI
+  x <- c(49, -67, 8, 6, 16, 23, 28, 41, 14, 29, 56, 24, 75, 60, -48)
+  combinations <- as.matrix(expand.grid(rep(list(c(-1, 1)), 15)))
+  df <- data.frame(outcome = x, group = rep(1, length(x)))
+  output <- permutation_test_ci(df, "group", "outcome", strata_col = NULL,
+                                test_stat = "mean",
+                                perm_func = permute_sign,
+                                upper_bracket = c(10, 75),
+                                lower_bracket = c(-20, 10),
+                                perm_set = combinations,
+                                cl = 0.95,
+                                e = 0.001,
+                                seed = 42)
+  expect_equal(round(output$ci[1], 2), -0.2)
+  expect_equal(round(output$ci[2], 2), 41)
 })

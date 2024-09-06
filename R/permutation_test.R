@@ -257,7 +257,7 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
     }
     # Save test stat dist under shift = 0
     test_stat_dist <- output$test_stat_dist
-  } else if(identical(test_stat_func, one_sample_mean)) {
+  } else if(is.character(test_stat) && test_stat == "mean") {
     # get size of data
     n <- nrow(df)
     # get number of group values equal to -1 for each permutation
@@ -288,19 +288,19 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
   m <- u_upper
   if(is.character(test_stat) && test_stat == "diff_in_means"){
     new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
-  } else if(identical(test_stat_func, one_sample_mean)) {
+    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
+  } else if(is.character(test_stat) && test_stat == "mean") {
     new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
   } else {
     params$shift <- m
     # run permutation test
     output <- do.call(permutation_test, params)
     # calculate p-value
     upper_p_value <- 2*min(output$p_value,
-                           (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                           (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
   }
 
   if(upper_p_value > alpha){
@@ -312,19 +312,19 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
   m <- u_lower
   if(is.character(test_stat) && test_stat == "diff_in_means"){
     new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
   } else if(identical(test_stat_func, one_sample_mean)) {
     new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+    upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
   } else {
     params$shift <- m
     # run permutation test
     output <- do.call(permutation_test, params)
     # calculate p-value
     upper_p_value <- 2*min(output$p_value,
-                           (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                           (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
   }
 
   if(upper_p_value < alpha){
@@ -339,19 +339,19 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
     # use speed up if difference in means test statistic
     if(is.character(test_stat) && test_stat == "diff_in_means"){
       new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-      upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                             (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
-    } else if(identical(test_stat_func, one_sample_mean)) {
+      upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                             (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
+    } else if(is.character(test_stat) && test_stat == "mean") {
       new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-      upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                             (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+      upper_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                             (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
     } else {
       params$shift <- m
       # run permutation test
       output <- do.call(permutation_test, params)
       # calculate p-value
       upper_p_value <- 2*min(output$p_value,
-                             (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                             (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
     }
     # update bounds
     if(upper_p_value > alpha){
@@ -380,19 +380,19 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
   m <- l_upper
   if(is.character(test_stat) && test_stat == "diff_in_means"){
     new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
-  } else if(identical(test_stat_func, one_sample_mean)) {
+    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
+  } else if(is.character(test_stat) && test_stat == "mean") {
     new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
   } else {
     params$shift <- m
     # run permutation test
     output <- do.call(permutation_test, params)
     # calculate p-value
     lower_p_value <- 2*min(output$p_value,
-                           (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                           (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
   }
 
   if(lower_p_value < alpha){
@@ -404,19 +404,19 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
   m <- l_lower
   if(is.character(test_stat) && test_stat == "diff_in_means"){
     new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
-  } else if(identical(test_stat_func, one_sample_mean)) {
+    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
+  } else if(is.character(test_stat) && test_stat == "mean") {
     new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                           (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+    lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                           (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
   } else {
     params$shift <- m
     # run permutation test
     output <- do.call(permutation_test, params)
     # calculate p-value
     lower_p_value <- 2*min(output$p_value,
-                           (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                           (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
   }
 
   if(lower_p_value > alpha){
@@ -430,23 +430,23 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
     # use speed up if difference in means test statistic
     if(is.character(test_stat) && test_stat == "diff_in_means"){
       new_test_dist <- test_stat_dist + m * n_switch * (1/nt + 1/nc)
-      lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                             (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
-    } else if(identical(test_stat_func, one_sample_mean)) {
+      lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                             (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
+    } else if(is.character(test_stat) && test_stat == "mean") {
       new_test_dist <- test_stat_dist + (m * (2 * num_neg) / n)
-      lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (reps + 1),
-                             (sum(new_test_dist <= obs_diff) + 1)/ (reps + 1))
+      lower_p_value <- 2*min((sum(new_test_dist >= obs_diff) + 1)/ (params$reps + 1),
+                             (sum(new_test_dist <= obs_diff) + 1)/ (params$reps + 1))
     } else {
       params$shift <- m
       # run permutation test
       output <- do.call(permutation_test, params)
       # calculate p-value
       lower_p_value <- 2*min(output$p_value,
-                             (sum(output$test_stat_dist <= obs_diff) + 1) / (reps + 1))
+                             (sum(output$test_stat_dist <= obs_diff) + 1) / (params$reps + 1))
     }
 
     # update bounds
-    if(lower_p_value > alpha){
+    if(lower_p_value >= alpha){
       l_upper <- m
     } else {
       l_lower <- m
