@@ -61,6 +61,17 @@ test_that("permutation test works", {
 
 })
 
+test_that("one-sample permutation test works", {
+  output <- one_sample(c(-1, 1, 2), seed = 42)
+  expect_equal(round(output, 2), 0.38)
+})
+
+test_that("two-sample permutation test works", {
+  output <- two_sample(x = c(10, 9, 11), y = c(12, 11, 13),
+                       alternative = "less", seed = 42)
+  expect_equal(round(output, 1), 0.1)
+})
+
 test_that("permutation test confidence interval works", {
   x <- c(35.3, 35.9, 37.2, 33.0, 31.9, 33.7, 36.0, 35.0,
          33.3, 33.6, 37.9, 35.6, 29.0, 33.7, 35.7)

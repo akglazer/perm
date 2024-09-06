@@ -165,6 +165,74 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 }
 
 
+#' One-sample permutation test
+#'
+#' This function runs a permutation test for the one-sample problem by calling
+#' the permutation_test function.
+#'
+#' @param x array of data
+#' @param shift Value of shift to apply in one-sample problem
+#' @param alternative String, two-sided or one-sided (greater or less) p-value
+#' @param reps Number of iterations to use when calculating permutation p-value
+#' @param seed An integer seed value
+#' @return The permutation test p-value
+#' @export
+one_sample <- function(x, shift = 0, alternative = "greater",
+                       reps = 10^4, seed = NULL){
+  # Set up dataframe for one-sample problem
+  data <- data.frame(outcome = x, group = rep(1, length(x)))
+  # Run permutation test
+  output <- permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+                             strata_col = NULL,
+                             test_stat = "mean",
+                             perm_func = permute_sign,
+                             alternative = alternative,
+                             shift = shift,
+                             reps = reps,
+                             perm_set = NULL,
+                             complete_enum = F)
+
+  return(output$p_value)
+}
+
+
+#' Two-sample permutation test
+#'
+#' This function runs a permutation test with difference in means test statistic
+#' for the two-sample problem by calling
+#' the permutation_test function.
+#'
+#' @param x array of data for treatment group
+#' @param y array of data for control group
+#' @param shift Value of shift to apply in two-sample problem
+#' @param alternative String, two-sided or one-sided (greater or less) p-value
+#' @param reps Number of iterations to use when calculating permutation p-value
+#' @param seed An integer seed value
+#' @return The permutation test p-value
+#' @export
+two_sample <- function(x, y, shift = 0, alternative = "greater",
+                       reps = 10^4, seed = NULL){
+  # Set up dataframe for one-sample problem
+  data <- data.frame(outcome = c(x, y),
+                     group = c(rep(1, length(x)), rep(0, length(y)))
+                    )
+
+  # Run permutation test
+  output <- permutation_test(df = data, group_col = "group",
+                             outcome_col = "outcome",
+                             strata_col = NULL,
+                             test_stat = "diff_in_means",
+                             perm_func = permute_group,
+                             alternative = alternative,
+                             shift = shift,
+                             reps = reps,
+                             perm_set = NULL,
+                             complete_enum = F)
+
+  return(output$p_value)
+}
+
+
 #' Construct confidence interval by inverting permutation tests
 #'
 #' This function constructs a confidence interval by inverting permutation tests
