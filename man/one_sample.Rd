@@ -22,7 +22,7 @@ The permutation test p-value
 }
 \description{
 This function runs a permutation test for the one-sample problem by calling
-the permutation_test function.
+the permutation_test function using the one-sample mean test statistic.
 }
 \examples{
 one_sample(x = c(-1, 1, 2), seed = 42)

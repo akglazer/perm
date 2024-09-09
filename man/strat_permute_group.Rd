@@ -4,13 +4,7 @@
 \alias{strat_permute_group}
 \title{Stratified group permutation}
 \usage{
-strat_permute_group(
-  df,
-  group_col,
-  strata_col,
-  seed = NULL,
-  return_perm = FALSE
-)
+strat_permute_group(df, group_col, strata_col, seed = NULL)
 }
 \arguments{
 \item{df}{A data frame}
@@ -20,11 +14,9 @@ strat_permute_group(
 \item{strata_col}{The name of the column in df that corresponds to the strata}
 
 \item{seed}{An integer seed value}
-
-\item{return_perm}{Boolean, return the permuted indices if TRUE}
 }
 \value{
-The inputted data frame with the group column randomly shuffled
+The inputted data frame with the group column randomly shuffled by strata
 }
 \description{
 This function takes a data frame and group and strata column name as input

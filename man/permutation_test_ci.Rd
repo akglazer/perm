@@ -43,7 +43,7 @@ permutation_test_ci(
 
 \item{reps}{Number of iterations to use when calculating permutation p-value}
 
-\item{perm_set}{Matrix of permutations to use instead of reps iterations of perm_func}
+\item{perm_set}{Matrix of group assignments to use instead of reps iterations of perm_func}
 
 \item{seed}{An integer seed value}
 }

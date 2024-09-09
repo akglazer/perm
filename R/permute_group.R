@@ -7,11 +7,9 @@
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
-#' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column randomly shuffled
 #' @export
-permute_group <- function(df, group_col, strata_col=NULL,
-                          seed=NULL, return_perm=FALSE){
+permute_group <- function(df, group_col, strata_col=NULL, seed=NULL){
   if(is.null(seed) == FALSE){
     set.seed(seed)
   }
@@ -27,13 +25,7 @@ permute_group <- function(df, group_col, strata_col=NULL,
   # Reorder the group column based on the permuted indices
   perm_df[[group_col]] <- df[[group_col]][permuted_indices]
 
-  if(return_perm){
-    return_perm_value <- permuted_indices
-  }else{
-    return_perm_value <- NULL
-  }
-
-  return(list(perm_df=perm_df, return_perm_value=return_perm_value))
+  return(perm_df)
 }
 
 #' Stratified group permutation
@@ -45,19 +37,15 @@ permute_group <- function(df, group_col, strata_col=NULL,
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
-#' @param return_perm Boolean, return the permuted indices if TRUE
-
-#' @return The inputted data frame with the group column randomly shuffled
+#' @return The inputted data frame with the group column randomly shuffled by strata
 #' @export
-strat_permute_group <- function(df, group_col, strata_col,
-                                seed=NULL, return_perm=FALSE){
+strat_permute_group <- function(df, group_col, strata_col, seed=NULL){
   if(is.null(seed) == FALSE){
     set.seed(seed)
   }
 
   strata_values <- unique(df[[strata_col]])
   perm_df <- df
-  full_permuted_indices <- 1:length(df$group)
 
   for (s in strata_values) {
     # Get the indices of rows in the current stratum
@@ -68,18 +56,9 @@ strat_permute_group <- function(df, group_col, strata_col,
 
     # Reorder the group column based on the permuted indices
     perm_df[[group_col]][strata_indices] <- df[[group_col]][permuted_indices]
-
-    # Store the permuted indices
-    full_permuted_indices[strata_indices] <- permuted_indices
   }
 
-  if(return_perm){
-    return_perm_value <- full_permuted_indices
-  }else{
-    return_perm_value <- NULL
-  }
-
-  return(list(perm_df=perm_df, return_perm_value=return_perm_value))
+  return(perm_df)
 }
 
 #' Sign permutation
@@ -91,11 +70,9 @@ strat_permute_group <- function(df, group_col, strata_col,
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param strata_col The name of the column in df that corresponds to the strata
 #' @param seed An integer seed value
-#' @param return_perm Boolean, return the permuted indices if TRUE
 #' @return The inputted data frame with the group column replaced with randomly assigned signs
 #' @export
-permute_sign <- function(df, group_col, strata_col=NULL,
-                          seed=NULL, return_perm=FALSE){
+permute_sign <- function(df, group_col, strata_col=NULL, seed=NULL){
   # Set seed if not NULL
   if(is.null(seed) == FALSE){
     set.seed(seed)
@@ -111,13 +88,7 @@ permute_sign <- function(df, group_col, strata_col=NULL,
   perm_sign <- sample(c(1, -1), size = length(df[[group_col]]), replace = T)
   perm_df[[group_col]] <- perm_sign
 
-  if(return_perm){
-    return_perm_value <- perm_sign
-  }else{
-    return_perm_value <- NULL
-  }
-
-  return(list(perm_df=perm_df, return_perm_value=return_perm_value))
+  return(perm_df)
 
 }
 

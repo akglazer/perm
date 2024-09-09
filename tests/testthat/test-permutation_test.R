@@ -63,7 +63,7 @@ test_that("permutation test works", {
 
 test_that("one-sample permutation test works", {
   output <- one_sample(c(-1, 1, 2), seed = 42)
-  expect_equal(round(output, 2), 0.38)
+  expect_equal(round(output, 2), 0.39)
 })
 
 test_that("two-sample permutation test works", {

@@ -11,10 +11,10 @@
 #' @param alternative String, two-sided or one-sided (greater or less) p-value
 #' @param shift Value of shift to apply in one- or two-sample problem
 #' @param reps Number of iterations to use when calculating permutation p-value
-#' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
+#' @param perm_set Matrix of group assignments to use instead of reps iterations of perm_func
 #' @param complete_enum Boolean, whether to calculate P-value under complete enumeration of permutations
 #' @param return_test_dist Boolean, whether to return test statistic distribution under permutations
-#' @param return_perm_dist Boolean, whether to return the permutaiton distribution
+#' @param return_perm_dist Boolean, whether to return a matrix where each row is the group assignment under that permutation
 #' @param seed An integer seed value
 #' @return
 #' \code{p_value}: the permutation test p-value
@@ -29,7 +29,7 @@
 #'
 #' permutation_test(df = data, group_col = "group", outcome_col = "outcome",
 #' test_stat = "diff_in_means", perm_func = permute_group, alternative = "greater",
-#' shift = 0, reps = 10, return_perm_dist = T, return_test_dist = T, seed = 42)
+#' shift = 0, reps = 10, return_perm_dist = TRUE, return_test_dist = TRUE, seed = 42)
 #'
 #' @export
 permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
@@ -91,11 +91,10 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 
     for(i in 1:reps){
       # shuffle data
-      perm_output <- perm_func(df, group_col, strata_col, NULL, return_perm_dist)
-      perm_df <- perm_output$perm_df
+      perm_df <- perm_func(df, group_col, strata_col, NULL)
       # if return_perm_dist, insert permutation into array
       if(return_perm_dist){
-        perm_indices_mat[i, ] <- perm_output$return_perm_value
+        perm_indices_mat[i, ] <- perm_df[[group_col]]
       }
       # if shift != 0 and 2 groups, modify outcome variable
       if(shift != 0 & length(group_names) == 2){
@@ -121,12 +120,7 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
     for(i in 1:nrow(perm_set)){
       # apply permutation to data
       perm_df <- df
-      # if not permuted indices, assign perm_set row value directly to group
-      if(sum(perm_set[i, ]) != sum(1:nrow(df))){
-        perm_df$group <- perm_set[i, ]
-      } else {
-        perm_df$group <- df$group[perm_set[i, ]]
-      }
+      perm_df[[group_col]] <- perm_set[i, ]
 
       # if shift != 0, modify outcome variable
       if(shift != 0 & length(group_names) == 2){
@@ -182,7 +176,7 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 #' One-sample permutation test
 #'
 #' This function runs a permutation test for the one-sample problem by calling
-#' the permutation_test function.
+#' the permutation_test function using the one-sample mean test statistic.
 #'
 #' @param x array of data
 #' @param shift Value of shift to apply in one-sample problem
@@ -207,7 +201,8 @@ one_sample <- function(x, shift = 0, alternative = "greater",
                              shift = shift,
                              reps = reps,
                              perm_set = NULL,
-                             complete_enum = F)
+                             complete_enum = F,
+                             seed=seed)
 
   return(output$p_value)
 }
@@ -244,7 +239,8 @@ two_sample <- function(x, y, shift = 0, alternative = "greater",
                              shift = shift,
                              reps = reps,
                              perm_set = NULL,
-                             complete_enum = F)
+                             complete_enum = F,
+                             seed=seed)
 
   return(output$p_value)
 }
@@ -265,7 +261,7 @@ two_sample <- function(x, y, shift = 0, alternative = "greater",
 #' @param cl Confidence level, default 0.95
 #' @param e Maximum distance from true confidence bound value
 #' @param reps Number of iterations to use when calculating permutation p-value
-#' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
+#' @param perm_set Matrix of group assignments to use instead of reps iterations of perm_func
 #' @param seed An integer seed value
 #' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
 #' @export
@@ -332,13 +328,12 @@ permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
 
   # Speed up for 2 sample problem -- calculate necessary values
   if(is.character(test_stat) && test_stat == "diff_in_means"){
-    t_indices <- which(df[[group_col]] == group_names[1])
-    nt <- length(t_indices)
+    nt <- sum(df[[group_col]] == group_names[1])
     nc <- nrow(df) - nt
 
     n_switch <- rep(0, nrow(params$perm_set))
     for(row in 1:nrow(params$perm_set)){
-      n_switch[row] <- length(setdiff(t_indices, params$perm_set[row, ][t_indices]))
+      n_switch[row] <- sum(df[[group_col]] == group_names[1] & params$perm_set[row, ] == group_names[2])
     }
     # Save test stat dist under shift = 0
     test_stat_dist <- output$test_stat_dist

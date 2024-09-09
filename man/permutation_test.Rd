@@ -40,13 +40,13 @@ permutation_test(
 
 \item{reps}{Number of iterations to use when calculating permutation p-value}
 
-\item{perm_set}{Matrix of permutations to use instead of reps iterations of perm_func}
+\item{perm_set}{Matrix of group assignments to use instead of reps iterations of perm_func}
 
 \item{complete_enum}{Boolean, whether to calculate P-value under complete enumeration of permutations}
 
 \item{return_test_dist}{Boolean, whether to return test statistic distribution under permutations}
 
-\item{return_perm_dist}{Boolean, whether to return the permutaiton distribution}
+\item{return_perm_dist}{Boolean, whether to return a matrix where each row is the group assignment under that permutation}
 
 \item{seed}{An integer seed value}
 }
@@ -67,6 +67,6 @@ data <- data.frame(group = c(rep(1, 10), rep(2, 10)), outcome = c(rep(1, 10), re
 
 permutation_test(df = data, group_col = "group", outcome_col = "outcome",
 test_stat = "diff_in_means", perm_func = permute_group, alternative = "greater",
-shift = 0, reps = 10, return_perm_dist = T, return_test_dist = T, seed = 42)
+shift = 0, reps = 10, return_perm_dist = TRUE, return_test_dist = TRUE, seed = 42)
 
 }
