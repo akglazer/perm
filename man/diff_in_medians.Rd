@@ -22,3 +22,12 @@ The difference in median outcome between the two groups
 This function takes a data frame, and group and outcome column names as input
 and returns the difference in median outcome between the two groups
 }
+\examples{
+data <- data.frame(group = c(rep(1, 4), rep(2, 4)),
+                   outcome = c(rep(3, 4), rep(5, 4)))
+
+diff_in_medians(df = data,
+              group_col = "group",
+              outcome_col = "outcome",
+              treatment_value = 1)
+}

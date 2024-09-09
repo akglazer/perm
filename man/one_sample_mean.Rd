@@ -18,5 +18,15 @@ The one-sample problem test statistic: the mean of the product of the outcome an
 }
 \description{
 This function takes a data frame, and group and outcome column names as input
-and returns the mean of the product of the outcome and group
+and returns the mean of the product of the outcome and group. This test statistic
+is used for the one-sample problem.
+}
+\examples{
+data <- data.frame(group = c(rep(1, 4), rep(2, 4)),
+                   outcome = c(rep(3, 4), rep(5, 4)))
+
+one_sample_mean(df = data,
+              group_col = "group",
+              outcome_col = "outcome")
+
 }

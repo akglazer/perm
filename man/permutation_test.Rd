@@ -51,8 +51,22 @@ permutation_test(
 \item{seed}{An integer seed value}
 }
 \value{
-A list containing the permutation test p-value, and the test statistic distribution if applicable
+\code{p_value}: the permutation test p-value
+
+\code{test_stat_dist}: array, the distribution of the test statistic under the set of permutations,
+if return_test_dist is set to TRUE
+
+\code{perm_indices_mat}: matrix, each row corresponds to a permutation used
+in the permutation test calculation
 }
 \description{
-This function runs a permutation test
+Run permutation test with user inputted data, test statistic, and permutation function
+}
+\examples{
+data <- data.frame(group = c(rep(1, 10), rep(2, 10)), outcome = c(rep(1, 10), rep(1, 10)))
+
+permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+test_stat = "diff_in_means", perm_func = permute_group, alternative = "greater",
+shift = 0, reps = 10, return_perm_dist = T, return_test_dist = T, seed = 42)
+
 }

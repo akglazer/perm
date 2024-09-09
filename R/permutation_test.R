@@ -1,6 +1,6 @@
 #' Run permutation test
 #'
-#' This function runs a permutation test
+#' Run permutation test with user inputted data, test statistic, and permutation function
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
@@ -16,7 +16,21 @@
 #' @param return_test_dist Boolean, whether to return test statistic distribution under permutations
 #' @param return_perm_dist Boolean, whether to return the permutaiton distribution
 #' @param seed An integer seed value
-#' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
+#' @return
+#' \code{p_value}: the permutation test p-value
+#'
+#' \code{test_stat_dist}: array, the distribution of the test statistic under the set of permutations,
+#' if return_test_dist is set to TRUE
+#'
+#' \code{perm_indices_mat}: matrix, each row corresponds to a permutation used
+#' in the permutation test calculation
+#' @examples
+#' data <- data.frame(group = c(rep(1, 10), rep(2, 10)), outcome = c(rep(1, 10), rep(1, 10)))
+#'
+#' permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+#' test_stat = "diff_in_means", perm_func = permute_group, alternative = "greater",
+#' shift = 0, reps = 10, return_perm_dist = T, return_test_dist = T, seed = 42)
+#'
 #' @export
 permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
                              test_stat = "diff_in_means",
@@ -176,6 +190,9 @@ permutation_test <- function(df, group_col, outcome_col, strata_col = NULL,
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param seed An integer seed value
 #' @return The permutation test p-value
+#' @examples
+#' one_sample(x = c(-1, 1, 2), seed = 42)
+#'
 #' @export
 one_sample <- function(x, shift = 0, alternative = "greater",
                        reps = 10^4, seed = NULL){

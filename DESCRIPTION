@@ -1,6 +1,6 @@
 Package: perm
 Title: A Permutation Test Package
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     person("Amanda", "Glazer", , "amanda.glazer@austin.utexas.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))

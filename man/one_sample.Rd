@@ -24,3 +24,7 @@ The permutation test p-value
 This function runs a permutation test for the one-sample problem by calling
 the permutation_test function.
 }
+\examples{
+one_sample(x = c(-1, 1, 2), seed = 42)
+
+}
