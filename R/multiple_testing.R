@@ -107,7 +107,6 @@ npc <- function(df, group_col, outcome_cols, strata_col = NULL,
       perm_set <- output$perm_indices_mat
       reps <- nrow(perm_set)
     }
-      #### VERIFY ####
       p_value_mat[,i] <- (reps - rank(output$test_stat_dist, ties.method = "min") + 1)/(reps+1)
   }
   # Get combined p-values

@@ -5,7 +5,7 @@
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
-#' @param strata_col The name of the column in df that corresponds to the strata
+#' @param strata_col The name of the column in df that corresponds to the strata, should be NULL for unstratified permutation
 #' @param seed An integer seed value
 #' @return The inputted data frame with the group column randomly shuffled
 #' @export
@@ -68,7 +68,7 @@ strat_permute_group <- function(df, group_col, strata_col, seed=NULL){
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
-#' @param strata_col The name of the column in df that corresponds to the strata
+#' @param strata_col The name of the column in df that corresponds to the strata, should be NULL for this function
 #' @param seed An integer seed value
 #' @return The inputted data frame with the group column replaced with randomly assigned signs
 #' @export
