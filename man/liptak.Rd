@@ -16,3 +16,7 @@ Combined p-value using Liptak's method
 This function takes an array of p-values and returns a combined p-value using Liptak's combining function:
 \eqn{\sum_i \Phi^{-1}(1-p_i)} where \eqn{\Phi} is the CDF of the Normal distribution
 }
+\examples{
+liptak(pvalues = c(.05, .1, .5))
+
+}

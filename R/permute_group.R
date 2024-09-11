@@ -4,11 +4,15 @@
 #' and returns the dataframe with the group column randomly permuted
 #'
 #' @param df A data frame
-#' @param group_col The name of the column in df that corresponds to the group label
+#' @param group_col String, the name of the column in df that corresponds to the group label
 #' @param strata_col The name of the column in df that corresponds to the strata, should be NULL for unstratified permutation
 #' @param seed An integer seed value
 #' @return The inputted data frame with the group column randomly shuffled
 #' @export
+#' @examples
+#' data <- data.frame(group_label = c(1, 2, 2, 1, 2, 1), outcome = 1:6)
+#' permute_group(df = data, group_col = "group_label", strata_col = NULL, seed = 42)
+#'
 permute_group <- function(df, group_col, strata_col=NULL, seed=NULL){
   if(is.null(seed) == FALSE){
     set.seed(seed)
@@ -39,6 +43,10 @@ permute_group <- function(df, group_col, strata_col=NULL, seed=NULL){
 #' @param seed An integer seed value
 #' @return The inputted data frame with the group column randomly shuffled by strata
 #' @export
+#' @examples
+#' data <- data.frame(group_label = c(1, 2, 2, 1, 2, 1), stratum = c(1, 1, 1, 2, 2, 2), outcome = 1:6)
+#' permute_group(df = data, group_col = "group_label", strata_col = "stratum", seed = 42)
+#'
 strat_permute_group <- function(df, group_col, strata_col, seed=NULL){
   if(is.null(seed) == FALSE){
     set.seed(seed)
@@ -72,6 +80,10 @@ strat_permute_group <- function(df, group_col, strata_col, seed=NULL){
 #' @param seed An integer seed value
 #' @return The inputted data frame with the group column replaced with randomly assigned signs
 #' @export
+#' @examples
+#' data <- data.frame(group_label = rep(1, 6), outcome = 1:6)
+#' permute_group(df = data, group_col = "group_label", strata_col = NULL, seed = 42)
+#'
 permute_sign <- function(df, group_col, strata_col=NULL, seed=NULL){
   # Set seed if not NULL
   if(is.null(seed) == FALSE){

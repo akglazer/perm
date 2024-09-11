@@ -8,7 +8,7 @@
 #' @param strata_col The name of the column in df that corresponds to the strata
 #' @param test_stat Test statistic function
 #' @param perm_func Function to permute group
-#' @param alternative String, two-sided or one-sided (greater or less) p-value
+#' @param alternative String, two-sided or one-sided (greater or less) p-value; options are 'greater', 'less', or 'two-sided'
 #' @param shift Value of shift to apply in one- or two-sample problem
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param perm_set Matrix of group assignments to use instead of reps iterations of perm_func
@@ -217,11 +217,14 @@ one_sample <- function(x, shift = 0, alternative = "greater",
 #' @param x array of data for treatment group
 #' @param y array of data for control group
 #' @param shift Value of shift to apply in two-sample problem
-#' @param alternative String, two-sided or one-sided (greater or less) p-value
+#' @param alternative String, two-sided or one-sided (greater or less) p-value; options are 'greater', 'less', or 'two-sided'
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param seed An integer seed value
 #' @return The permutation test p-value
 #' @export
+#' @examples
+#' two_sample(x = c(10, 9, 11), y = c(12, 11, 13), alternative = "less", seed = 42)
+#'
 two_sample <- function(x, y, shift = 0, alternative = "greater",
                        reps = 10^4, seed = NULL){
   # Set up dataframe for one-sample problem
@@ -248,7 +251,7 @@ two_sample <- function(x, y, shift = 0, alternative = "greater",
 
 #' Construct confidence interval by inverting permutation tests
 #'
-#' This function constructs a confidence interval by inverting permutation tests
+#' This function constructs a confidence interval by inverting permutation tests and applying the method in Glazer and Stark, 2024.
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
@@ -265,6 +268,14 @@ two_sample <- function(x, y, shift = 0, alternative = "greater",
 #' @param seed An integer seed value
 #' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
 #' @export
+#' @examples
+#' x <- c(35.3, 35.9, 37.2, 33.0, 31.9, 33.7, 36.0, 35.0, 33.3, 33.6, 37.9, 35.6, 29.0, 33.7, 35.7)
+#' y <- c(32.5, 34.0, 34.4, 31.8, 35.0, 34.6, 33.5, 33.6, 31.5, 33.8, 34.6)
+#' df <- data.frame(outcome = c(x, y), group = c(rep(1, length(x)), rep(0, length(y))))
+#' permutation_test_ci(df = df, group_col = "group", outcome_col = "outcome", strata_col = NULL,
+#'                     test_stat = "diff_in_means", perm_func = permute_group,
+#'                     upper_bracket = NULL, lower_bracket = NULL,
+#'                     cl = 0.95, e = 0.01, reps = 10^3, seed = 42)
 permutation_test_ci <- function(df, group_col, outcome_col, strata_col = NULL,
                                 test_stat = "diff_in_means",
                                 perm_func = permute_group,

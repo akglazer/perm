@@ -30,9 +30,9 @@ npc(
 
 \item{test_stat}{Test statistic function}
 
-\item{perm_func}{Function to permute group}
+\item{perm_func}{Function to permute group, default is permute_group which randomly permutes group assignment}
 
-\item{combn}{Combining function method to use}
+\item{combn}{Combining function method to use, takes values 'fisher', 'tippett', or 'liptak', or a user defined function}
 
 \item{shift}{Value of shift to apply in one- or two-sample problem}
 
@@ -45,9 +45,18 @@ npc(
 \item{seed}{An integer seed value}
 }
 \value{
-A list containing the permutation test p-value, and the test statistic distribution if applicable
+The omnibus p-value
 }
 \description{
 This function takes a data frame and group and outcome column names as input
-and returns the NPC omnibus p-value
+and returns the nonparametric combination of tests (NPC) omnibus p-value
+}
+\examples{
+data <- data.frame(group = c(rep(1, 4), rep(2, 4)),
+out1 = c(0, 1, 0, 0, 1, 1, 1, 0),
+out2 = rep(1, 8))
+output <- npc(df = data, group_col = "group",
+              outcome_cols = c("out1", "out2"), perm_func = permute_group,
+              combn = "fisher", reps = 10^4, seed=42)
+
 }

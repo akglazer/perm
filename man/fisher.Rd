@@ -16,3 +16,7 @@ Combined p-value using fisher's method
 This function takes an array of p-values and returns a combined p-value using fisher's combining function:
 \eqn{-2 \sum_i \log(p_i)}
 }
+\examples{
+fisher(pvalues = c(.05, .1, .5))
+
+}

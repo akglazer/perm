@@ -51,5 +51,14 @@ permutation_test_ci(
 A list containing the permutation test p-value, and the test statistic distribution if applicable
 }
 \description{
-This function constructs a confidence interval by inverting permutation tests
+This function constructs a confidence interval by inverting permutation tests and applying the method in Glazer and Stark, 2024.
+}
+\examples{
+x <- c(35.3, 35.9, 37.2, 33.0, 31.9, 33.7, 36.0, 35.0, 33.3, 33.6, 37.9, 35.6, 29.0, 33.7, 35.7)
+y <- c(32.5, 34.0, 34.4, 31.8, 35.0, 34.6, 33.5, 33.6, 31.5, 33.8, 34.6)
+df <- data.frame(outcome = c(x, y), group = c(rep(1, length(x)), rep(0, length(y))))
+permutation_test_ci(df = df, group_col = "group", outcome_col = "outcome", strata_col = NULL,
+                    test_stat = "diff_in_means", perm_func = permute_group,
+                    upper_bracket = NULL, lower_bracket = NULL,
+                    cl = 0.95, e = 0.01, reps = 10^3, seed = 42)
 }

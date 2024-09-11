@@ -11,7 +11,7 @@ permute_sign(df, group_col, strata_col = NULL, seed = NULL)
 
 \item{group_col}{The name of the column in df that corresponds to the group label}
 
-\item{strata_col}{The name of the column in df that corresponds to the strata}
+\item{strata_col}{The name of the column in df that corresponds to the strata, should be NULL for this function}
 
 \item{seed}{An integer seed value}
 }
@@ -21,4 +21,9 @@ The inputted data frame with the group column replaced with randomly assigned si
 \description{
 This function takes a data frame and group and outcome column name as input
 and returns the dataframe with the group column replaced with randomly assigned signs
+}
+\examples{
+data <- data.frame(group_label = rep(1, 6), outcome = 1:6)
+permute_group(df = data, group_col = "group_label", strata_col = NULL, seed = 42)
+
 }

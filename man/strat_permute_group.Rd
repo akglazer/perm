@@ -22,3 +22,8 @@ The inputted data frame with the group column randomly shuffled by strata
 This function takes a data frame and group and strata column name as input
 and returns the dataframe with the group column randomly permuted by strata
 }
+\examples{
+data <- data.frame(group_label = c(1, 2, 2, 1, 2, 1), stratum = c(1, 1, 1, 2, 2, 2), outcome = 1:6)
+permute_group(df = data, group_col = "group_label", strata_col = "stratum", seed = 42)
+
+}

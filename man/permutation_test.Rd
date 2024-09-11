@@ -34,7 +34,7 @@ permutation_test(
 
 \item{perm_func}{Function to permute group}
 
-\item{alternative}{String, two-sided or one-sided (greater or less) p-value}
+\item{alternative}{String, two-sided or one-sided (greater or less) p-value; options are 'greater', 'less', or 'two-sided'}
 
 \item{shift}{Value of shift to apply in one- or two-sample problem}
 

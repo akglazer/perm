@@ -13,7 +13,7 @@ two_sample(x, y, shift = 0, alternative = "greater", reps = 10^4, seed = NULL)
 
 \item{shift}{Value of shift to apply in two-sample problem}
 
-\item{alternative}{String, two-sided or one-sided (greater or less) p-value}
+\item{alternative}{String, two-sided or one-sided (greater or less) p-value; options are 'greater', 'less', or 'two-sided'}
 
 \item{reps}{Number of iterations to use when calculating permutation p-value}
 
@@ -26,4 +26,8 @@ The permutation test p-value
 This function runs a permutation test with difference in means test statistic
 for the two-sample problem by calling
 the permutation_test function.
+}
+\examples{
+two_sample(x = c(10, 9, 11), y = c(12, 11, 13), alternative = "less", seed = 42)
+
 }

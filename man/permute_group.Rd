@@ -9,9 +9,9 @@ permute_group(df, group_col, strata_col = NULL, seed = NULL)
 \arguments{
 \item{df}{A data frame}
 
-\item{group_col}{The name of the column in df that corresponds to the group label}
+\item{group_col}{String, the name of the column in df that corresponds to the group label}
 
-\item{strata_col}{The name of the column in df that corresponds to the strata}
+\item{strata_col}{The name of the column in df that corresponds to the strata, should be NULL for unstratified permutation}
 
 \item{seed}{An integer seed value}
 }
@@ -21,4 +21,9 @@ The inputted data frame with the group column randomly shuffled
 \description{
 This function takes a data frame and group column name as input
 and returns the dataframe with the group column randomly permuted
+}
+\examples{
+data <- data.frame(group_label = c(1, 2, 2, 1, 2, 1), outcome = 1:6)
+permute_group(df = data, group_col = "group_label", strata_col = NULL, seed = 42)
+
 }

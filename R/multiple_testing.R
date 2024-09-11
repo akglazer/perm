@@ -6,6 +6,9 @@
 #' @param pvalues Array of p-values
 #' @return Combined p-value using fisher's method
 #' @export
+#' @examples
+#' fisher(pvalues = c(.05, .1, .5))
+#'
 fisher <- function(pvalues){
   # compute fisher combination
   value <- -2 * log(prod(pvalues))
@@ -22,6 +25,9 @@ fisher <- function(pvalues){
 #' @param pvalues Array of p-values
 #' @return Combined p-value using Tippett's method
 #' @export
+#' @examples
+#' tippett(pvalues = c(.05, .1, .5))
+#'
 tippett <- function(pvalues){
   # compute tippett
   value <- max(1-pvalues)
@@ -39,6 +45,9 @@ tippett <- function(pvalues){
 #' @param pvalues Array of p-values
 #' @return Combined p-value using Liptak's method
 #' @export
+#' @examples
+#' liptak(pvalues = c(.05, .1, .5))
+#'
 liptak <- function(pvalues){
 
   value <- sum(qnorm(1-pvalues))
@@ -50,22 +59,30 @@ liptak <- function(pvalues){
 #' Run NPC
 #'
 #' This function takes a data frame and group and outcome column names as input
-#' and returns the NPC omnibus p-value
+#' and returns the nonparametric combination of tests (NPC) omnibus p-value
 #'
 #' @param df A data frame
 #' @param group_col The name of the column in df that corresponds to the group label
 #' @param outcome_cols The names of the columns in df that corresponds to the outcome variable
 #' @param strata_col The name of the column in df that corresponds to the strata
 #' @param test_stat Test statistic function
-#' @param perm_func Function to permute group
-#' @param combn Combining function method to use
+#' @param perm_func Function to permute group, default is permute_group which randomly permutes group assignment
+#' @param combn Combining function method to use, takes values 'fisher', 'tippett', or 'liptak', or a user defined function
 #' @param shift Value of shift to apply in one- or two-sample problem
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
 #' @param complete_enum Boolean, whether to calculate P-value under complete enumeration of permutations
 #' @param seed An integer seed value
-#' @return A list containing the permutation test p-value, and the test statistic distribution if applicable
+#' @return The omnibus p-value
 #' @export
+#' @examples
+#' data <- data.frame(group = c(rep(1, 4), rep(2, 4)),
+#' out1 = c(0, 1, 0, 0, 1, 1, 1, 0),
+#' out2 = rep(1, 8))
+#' output <- npc(df = data, group_col = "group",
+#'               outcome_cols = c("out1", "out2"), perm_func = permute_group,
+#'               combn = "fisher", reps = 10^4, seed=42)
+#'
 npc <- function(df, group_col, outcome_cols, strata_col = NULL,
                 test_stat = "diff_in_means",
                 perm_func = permute_group,

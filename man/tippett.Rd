@@ -16,3 +16,7 @@ Combined p-value using Tippett's method
 This function takes an array of p-values and returns a combined p-value using Tippett's combining function:
 \eqn{\max_i \{1-p_i\}}
 }
+\examples{
+tippett(pvalues = c(.05, .1, .5))
+
+}
