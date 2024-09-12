@@ -42,6 +42,20 @@ test_that("permutation test works", {
   # check that indices only permuted within strata
   expect_equal(sum(outcome$perm_indices_mat[,1:10] < 11), 100)
 
+  # Create difference in max test statistic and run permutation test
+  test_stat_func <- function(df, group_col, outcome_col){
+    value <- max(df[[outcome_col]][df[group_col] == 1]) - max(df[[outcome_col]][df[group_col] == 0])
+
+    return(value)
+  }
+  data <- data.frame(group = c(1, 1, 1, 0, 0, 0),
+                     outcome = c(3, 7, 5, 6, 2, 1))
+  # P-value should be 1/2 for anytime 7 is in group 1
+  output <- permutation_test(df = data, group_col = "group", outcome_col = "outcome",
+                             strata_col = NULL, test_stat = test_stat_func,
+                             perm_func = permute_group, alternative = 'greater', reps = 1000, seed = 42)
+  expect_equal(round(output$p_value, 1), 0.5)
+
   # One-sample problem
   data <- data.frame(group = rep(1, 3), outcome = c(-1, 1, 2))
   perm_set <- as.matrix(expand.grid(c(-1, 1), c(-1, 1), c(-1, 1)))

@@ -3,7 +3,7 @@ Title: A Permutation Test Package
 Version: 1.0.0
 Authors@R: 
     person("Amanda", "Glazer", , "amanda.glazer@austin.utexas.edu", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-3229-7924"))
 Description: A package for running permutation tests and constructing associated confidence intervals.
 License: GPL (>= 3)
 Encoding: UTF-8
