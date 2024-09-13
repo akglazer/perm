@@ -4,7 +4,7 @@ The goal of permutest is to allow users to run permutation tests and construct a
 
 ## Installation
 
-You can install the development version of permutest from [GitHub](https://github.com/) with:
+You can install the development version of permutest from [GitHub](https://github.com/akglazer/permutest) with:
 
 ``` r
 # install.packages("devtools")
