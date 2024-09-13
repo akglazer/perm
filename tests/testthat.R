@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(perm)
+library(permutest)
 
-test_check("perm")
+test_check("permutest")
