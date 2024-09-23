@@ -139,3 +139,46 @@ npc <- function(df, group_col, outcome_cols, strata_col = NULL,
   return(omnibus_p)
 }
 
+#' Adjust p-values for multiple testing
+#'
+#' This function takes an array of p-values and returns adjusted p-values using
+#' user-inputted FWER or FDR correction method
+#'
+#' @param pvalues Array of p-values
+#' @param method The FWER or FDR correction to use, either 'holm-bonferroni',
+#' 'bonferroni', or 'benjamini-hochberg'
+#' @return Adjusted p-values
+#' @export
+#' @examples
+#' adjust_p_value(pvalues = c(.05, .1, .5), method='holm-bonferroni')
+#'
+adjust_p_value <- function(pvalues, method='holm-bonferroni'){
+  # get number of p-values
+  n <- length(pvalues)
+  if(method == 'holm-bonferroni'){
+    order <- rank(pvalues, ties.method = 'last')
+    adj_pvalues <- pmin(pvalues * (n - order + 1), rep(1, n))
+    prev_index <- which(order == 1)
+    for (i in 1:n) {
+      current_index <- which(order == i)
+      adj_pvalues[current_index] <- max(adj_pvalues[prev_index], adj_pvalues[current_index])
+      prev_index <- current_index
+    }
+  } else if (method == "bonferroni"){
+    adj_pvalues <- pmin(pvalues*n, rep(1, n))
+  } else if (method == "benjamini-hochberg"){
+    order <- rank(pvalues, ties.method = 'last')
+    adj_pvalues <- pmin(pvalues * (n / order), rep(1, n))
+    prev_index <- which(order == n)
+    for (i in n:1) {
+      current_index <- which(order == i)
+      adj_pvalues[current_index] <- min(adj_pvalues[prev_index], adj_pvalues[current_index])
+      prev_index <- current_index
+    }
+  } else {
+    stop("Method must be 'holm-bonferroni', 'bonferroni', or 'benjamini-hochberg'")
+  }
+
+  return(adj_pvalues)
+}
+

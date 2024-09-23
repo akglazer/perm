@@ -37,3 +37,14 @@ test_that("npc works", {
   output <- npc(df = data, group_col = "group", outcome_cols = c("out1", "out2"), reps = 10^4, seed = 42)
   expect_equal(round(output, 2), .17)
 })
+
+test_that("p-value adjustment works", {
+  output <- adjust_p_value(pvalues = c(.01, .04, .03, .005), method = 'holm-bonferroni')
+  expect_equal(output, c(.03, .06, .06, .02))
+
+  output <- adjust_p_value(pvalues = c(.01, .04, .03, .005), method = 'bonferroni')
+  expect_equal(output, 4*c(.01, .04, .03, .005))
+
+  output <- adjust_p_value(pvalues = c(0.01, 0.001, 0.05, 0.20, 0.15, 0.15), method = 'benjamini-hochberg')
+  expect_equal(output, c(0.030, 0.006, 0.100, 0.200, 0.180, 0.180))
+})
