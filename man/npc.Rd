@@ -15,7 +15,7 @@ npc(
   shift = 0,
   reps = 10000,
   perm_set = NULL,
-  complete_enum = F,
+  complete_enum = FALSE,
   seed = NULL
 )
 }

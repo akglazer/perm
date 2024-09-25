@@ -4,7 +4,7 @@ Version: 1.0.0
 Authors@R: 
     person("Amanda", "Glazer", , "amanda.glazer@austin.utexas.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3229-7924"))
-Description: Runs permutation tests (Pesarin and Salmaso, 2010 <ISBN-13: 978-0470516416>) for any test statistic and randomization scheme and constructs associated confidence intervals (as described in Glazer and Stark, 2024).
+Description: Implements permutation tests for any test statistic and randomization scheme and constructs associated confidence intervals as described in Glazer and Stark (2024, arXiv:2405.05238).
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

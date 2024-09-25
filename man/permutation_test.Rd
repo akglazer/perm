@@ -15,7 +15,7 @@ permutation_test(
   shift = 0,
   reps = 10000,
   perm_set = NULL,
-  complete_enum = F,
+  complete_enum = FALSE,
   return_test_dist = FALSE,
   return_perm_dist = FALSE,
   seed = NULL
