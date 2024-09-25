@@ -201,7 +201,7 @@ one_sample <- function(x, shift = 0, alternative = "greater",
                              shift = shift,
                              reps = reps,
                              perm_set = NULL,
-                             complete_enum = F,
+                             complete_enum = FALSE,
                              seed=seed)
 
   return(output$p_value)
@@ -242,7 +242,7 @@ two_sample <- function(x, y, shift = 0, alternative = "greater",
                              shift = shift,
                              reps = reps,
                              perm_set = NULL,
-                             complete_enum = F,
+                             complete_enum = FALSE,
                              seed=seed)
 
   return(output$p_value)
