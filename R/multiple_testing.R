@@ -84,7 +84,7 @@ liptak <- function(pvalues){
 #'               outcome_cols = c("out1", "out2"), perm_func = permute_group,
 #'               combn = "tippett", shift = c(0,0), reps = 10^4, seed = 42)
 #'
-npc <- function(df, group_col, outcome_cols, alternative, shift, 
+npc <- function(df, group_col, outcome_cols, alternative = "greater", shift = 0, 
                 strata_col = NULL,
                 test_stat = "diff_in_means",
                 perm_func = permute_group,
@@ -118,13 +118,9 @@ npc <- function(df, group_col, outcome_cols, alternative, shift,
   for(i in 1:n_out){
     
     # Access the associated shift parameter
-    if(is.null(shift)){
-      shift_i <- 0
-    } else { 
-      shift_i <- as.numeric(shift)[i] 
-    }
+    shift_i <- as.numeric(shift)[i] 
     
-      output <- permutation_test(df = df, group_col = group_col,
+    output <- permutation_test(df = df, group_col = group_col,
                                  outcome_col = outcome_cols[i], strata_col = strata_col,
                                  test_stat = test_stat, perm_func = perm_func,
                                  shift = shift_i, reps = reps, perm_set = perm_set,
@@ -132,7 +128,7 @@ npc <- function(df, group_col, outcome_cols, alternative, shift,
                                  return_test_dist = T, return_perm_dist = T,
                                  seed = seed)
 
-      obs_p_value[i] <- output$p_value
+    obs_p_value[i] <- output$p_value
 
     if(i == 1){
       perm_set <- output$perm_indices_mat
@@ -216,45 +212,71 @@ adjust_p_value <- function(pvalues, method='holm-bonferroni'){
 #' @param param_values The matrix containing the parameter values to test
 #' @param test_stat Test statistic function
 #' @param combn Combining function method to use, takes values 'fisher', 'tippett', or 'liptak', or a user defined function
+#' @param strata_col The name of the column in df that corresponds to the strata
 #' @param reps Number of iterations to use when calculating permutation p-value
 #' @param perm_set Matrix of permutations to use instead of reps iterations of perm_func
+#' @param perm_func Function to use to permute the group indices
 #' @param seed An integer seed value
+#' @param complete_enum Boolean, whether to calculate P-value under complete enumeration of permutations.
 #' @return A list containing global_p_values, which contains the omnibus p-values, and perm_set, the permutations used.
 #' @export
 #' @examples
-#' TODO: write down an example!!
-#' data <- NA
-#' out1 = NA
-#' out2 = NA
-#' df_param <- NA
-#' output <- npc_grid(df = data, n = 20, m = 10, 
-#'                    group_col = 'group',
-#'                    outcome_cols = c('out1', 'out2'),
-#'                    alternative = 'greater',
-#'                    param_values = df_param,
-#'                    test_stat = 'diff_in_means',
-#'                    combn = 'tippett',
-#'                    reps = 10^4, 
-#'                    perm_set = NULL,
-#'                    seed = 374923084)
-#'
+#' # Data
+#' set.seed(8272026)
+#' m = 3
+#' k = 5
+#' group1 <- array(data = NA, dim = c(m, 2))
+#' group2 <- array(data = NA, dim = c(k, 2))
+#' group1[,1] <- rpois(n = m, lambda = 3)
+#' group1[,2] <- rexp(n = m, rate = 8.5)
+#' group2[,1] <- rpois(n = k, lambda = 100)
+#' group2[,2] <- rexp(n = k, rate = 1)
+#' data <- data.frame(rbind(group1, group2))
+#' data$group <- c(rep(1, m), rep(2, k))
+#' colnames(data) <- c('y1', 'y2', 'group')
+#' 
+#' # Parameter grid
+#' L1 <- 15 + 1
+#' L2 <- 10 + 1
+#' coord_1 <- seq(from = -110, to = -80, length.out = L1)
+#' coord_2 <- seq(from = -10, to = 10, length.out = L2)
+#' df_param <- expand.grid(coord1 = coord_1, 
+#'                         coord2 = coord_2)
+#'                         
+#' B <- 10^2  # Number of permutations desired                     
+#' output <- npc_many(df = data, 
+#'                     group_col = 'group',
+#'                     outcome_cols = c('y1', 'y2'),
+#'                     alternative = 'greater',
+#'                     param_values = df_param, 
+#'                     test_stat = 'diff_in_means',
+#'                     combn = 'tippett',
+#'                     reps = B,
+#'                     seed = 827202601)
+
 npc_many <- function(df,
                      group_col, outcome_cols, alternative,
                      param_values,
-                     test_stat, combn, 
-                     reps = NULL, perm_set = NULL,
+                     test_stat, combn,
+                     strata_col = NULL,
+                     reps = NULL, perm_set = NULL, 
+                     perm_func = permute_group, 
+                     complete_enum = FALSE,
                      seed = NULL){
   
-  # TODO: Add support for user choice of 
-  # strata_col, complete_enum, and perm_func
-  
-  # Print an error message if both reps and perm_set are null
-  # TODO: throw an error instead of just printing something
+  # Prints an error message if both reps and perm_set are null
   if(is.null(reps) & is.null(perm_set)){
-    print("The parameter 'reps' and the parameter 'perm_set' 
+    stop("The arguments for 'reps' and 'perm_set' 
           are both null. Please provide the desired number of 
           permutations as 'reps' or provide the actual
           set of permutations you want to use as 'perm_set'.")
+  }
+  
+  if(complete_enum & is.null(perm_set)){
+    stop("The argument for 'complete_enum' is TRUE but 
+          the argument for 'perm_set' 
+          is null. Please provide the desired
+          permutations via 'perm_set'.")
   }
   
   # Convert the parameter and permutation objects to arrays
@@ -279,13 +301,15 @@ npc_many <- function(df,
       group_col    = group_col,
       outcome_cols = outcome_cols,
       test_stat    = test_stat,
-      perm_func    = permute_group,
+      perm_func    = perm_func,
       combn        = combn,
       shift        = null_param,   
       perm_set     = perm_set,
       reps         = reps,
       seed         = seed,
       alternative  = alternative,
+      complete_enum = complete_enum,
+      strata_col   = strata_col
     )
     
     # Saves the omnibus p-value for the l^th parameter value.

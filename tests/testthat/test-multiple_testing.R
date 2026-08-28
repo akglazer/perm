@@ -172,7 +172,7 @@ test_that("npc_many works", {
   expect_gt(output2_1, 0) 
   expect_lt(output2_1, 10^-3) 
   
-  # At param=(1, 2), 
+  # At param=(0, 0), 
   # all of the permutations should have test statistics
   # greater than the observed, unless some of the permutations
   # are the exact same permutation as the observed.
@@ -190,8 +190,66 @@ test_that("npc_many works", {
   expect_gt(output2_3, 0.999) 
   expect_lte(output2_3, 1)
   
-  # TODO: add at least one more test and pass in a seed
-  # and use expect_equal() instead of inequalities
+  ##### Test 3 for npc_many ######
+  # Data
+  set.seed(8272026)
+  m = 3
+  k = 5
+  group1 <- array(data = NA, dim = c(m, 2))
+  group2 <- array(data = NA, dim = c(k, 2))
+  group1[,1] <- rpois(n = m, lambda = 3)
+  group1[,2] <- rexp(n = m, rate = 8.5)
+  group2[,1] <- rpois(n = k, lambda = 100)
+  group2[,2] <- rexp(n = k, rate = 1)
+  data <- data.frame(rbind(group1, group2))
+  data$group <- c(rep(1, m), rep(2, k))
+  colnames(data) <- c('y1', 'y2', 'group')
+  
+  # Parameter array
+  df_param <- data.frame(param1 = c(-88, -80, -92),
+                         param2 = c(-10, 0, 10))
+  
+  B <- 10^2  # Number of permutations desired
+  output3 <- npc_many(df = data,
+                     group_col = 'group',
+                     outcome_cols = c('y1', 'y2'),
+                     alternative = 'greater',
+                     param_values = df_param,
+                     test_stat = 'diff_in_means',
+                     combn = 'tippett',
+                     reps = B,
+                     seed = 827202601)
+  
+  # At param=(-88, -10), 
+  # all permutations should have a combined test statistic lower
+  # than the original permutation.
+  # The p-value should be small; for this seed, it should be 0.06930693.
+  output3_1 <- as.numeric(output3$global_p_values[1,'global_p_value'])
+  expect_equal(round(output3_1, 8), 0.06930693)
+  
+  # At param=(-80, 0), 
+  # the p-value should be 0.97029703.
+  output3_2<- as.numeric(output3$global_p_values[2,'global_p_value'])
+  expect_equal(round(output3_2, 8), 0.97029703)
+
+  
+  # At param=(-92, 10), 
+  # the p-value should be 0.13861386.
+  output3_3<- as.numeric(output3$global_p_values[3,'global_p_value'])
+  expect_equal(round(output3_3, 8), 0.13861386)
+  
+  # Expect error if we pass in complete_enum = TRUE
+  # because we are not also providing the permutation set
+  expect_error(npc_many(df = data,
+                      group_col = 'group',
+                      outcome_cols = c('y1', 'y2'),
+                      alternative = 'greater',
+                      param_values = df_param,
+                      test_stat = 'diff_in_means',
+                      combn = 'tippett',
+                      reps = B,
+                      seed = 827202601,
+                      complete_enum = TRUE))
 })
 
 test_that("p-value adjustment works", {
